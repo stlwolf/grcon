@@ -10,6 +10,7 @@ import UIKit
 import JSQMessagesViewController
 import APIKit
 import ObjectMapper
+import Firebase
 
 // 基底プロトコル
 public protocol BluemixRequestType: RequestType {
