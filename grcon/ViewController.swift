@@ -99,6 +99,9 @@ public struct NfcRequest: BluemixRequestType {
 
 class ViewController: JSQMessagesViewController {
 
+    var fb_server: Firebase!
+    let MAX_MESSAGE_NUM: UInt = 10
+    
     let oppId: String = "concierge"
     let oppDisplayName: String = "コンシェルジュ"
     let girlId: String = "girl"
@@ -125,8 +128,39 @@ class ViewController: JSQMessagesViewController {
         "夜の8時に待ち合わせでいい？",
     ]
     
+    // 暫定キーボード隠す関数
     func DismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    // firebaseの初期化
+    func setupFirebase() {
+        
+        // firebaseへのアクセス用
+        self.fb_server = Firebase(url: "https://resplendent-heat-414.firebaseio.com/")
+        
+        // 最新10件をFirebaseから取得する
+        // 最新のデータが追加されるたびに、再取得を行う
+        self.fb_server.queryLimitedToLast(self.MAX_MESSAGE_NUM).observeEventType(FEventType.ChildAdded, withBlock: { (snapshot) in
+            let text = snapshot.value["text"] as? String
+            let sender = snapshot.value["sender"] as? String
+            let name = snapshot.value["name"] as? String
+            print(snapshot.value!)
+            
+            let message = JSQMessage(senderId: sender, displayName: name, text: text)
+            
+            self.messages?.append(message)
+            self.finishSendingMessageAnimated(true)
+        })
+    }
+    
+    // firebaseへのテキスト送信
+    func sendFirebase(senderId: String, name: String, text: String) {
+        
+        let post = ["sender": senderId, "name": name, "text": text]
+        let postRef = self.fb_server.childByAutoId()
+        
+        postRef.setValue(post)
     }
     
     override func viewDidLoad() {
@@ -159,6 +193,8 @@ class ViewController: JSQMessagesViewController {
         self.events = []
         
         self.counter = 0
+        
+        self.setupFirebase()
     }
 
     override func didReceiveMemoryWarning() {
@@ -203,9 +239,11 @@ class ViewController: JSQMessagesViewController {
         
         print("senderId:" + senderId! + ", text:" + text!)
         
-        let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
-        self.messages?.append(message)
-        self.events?.append("") // self.message.append直後に必ず追加
+        //let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
+        //self.messages?.append(message)
+        //self.events?.append("") // self.message.append直後に必ず追加
+        
+        self.sendFirebase(senderId, name: senderDisplayName, text: text)
         
         // FIXME:サーバーにメッセージを送信する
         var nfc_answer: String = ""
