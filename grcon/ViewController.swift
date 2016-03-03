@@ -101,6 +101,8 @@ class ViewController: JSQMessagesViewController {
 
     var fb_server: Firebase!
     let MAX_MESSAGE_NUM: UInt = 10
+    let FIREBASE_URL: String = "https://resplendent-heat-414.firebaseio.com/"
+    let FIREBASE_ROOM_ID: String = "messages"
     
     let oppId: String = "concierge"
     let oppDisplayName: String = "コンシェルジュ"
@@ -108,7 +110,6 @@ class ViewController: JSQMessagesViewController {
     let girlDisplayName: String = "彼女"
     
     var messages: [JSQMessage]?
-    var events: [String]?
     var incomingBubble: JSQMessagesBubbleImage!
     var outgoingBubble: JSQMessagesBubbleImage!
     var girlBubble: JSQMessagesBubbleImage!
@@ -137,7 +138,7 @@ class ViewController: JSQMessagesViewController {
     func setupFirebase() {
         
         // firebaseへのアクセス用
-        self.fb_server = Firebase(url: "https://resplendent-heat-414.firebaseio.com/")
+        self.fb_server = Firebase(url: self.FIREBASE_URL + self.FIREBASE_ROOM_ID + "/")
         
         // 最新10件をFirebaseから取得する
         // 最新のデータが追加されるたびに、再取得を行う
@@ -190,7 +191,6 @@ class ViewController: JSQMessagesViewController {
         self.girlAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "girl"), diameter: 64)
         
         self.messages = []
-        self.events = []
         
         self.counter = 0
         
@@ -210,7 +210,6 @@ class ViewController: JSQMessagesViewController {
     func girlTalk() {
         let girl_message = JSQMessage(senderId: self.girlId, displayName: self.girlDisplayName, text: text_list[self.counter])
         self.messages?.append(girl_message)
-        self.events?.append("") // self.message.append直後に必ず追加
        
         self.finishReceivingMessageAnimated(true)
     }
@@ -231,17 +230,12 @@ class ViewController: JSQMessagesViewController {
         else {
             print("no text!!")
         }
-        print(self.events![indexPath.item])
     }
     
     // sendボタンを押した時
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
         print("senderId:" + senderId! + ", text:" + text!)
-        
-        //let message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
-        //self.messages?.append(message)
-        //self.events?.append("") // self.message.append直後に必ず追加
         
         self.sendFirebase(senderId, name: senderDisplayName, text: text)
         
@@ -259,12 +253,12 @@ class ViewController: JSQMessagesViewController {
                 // お店の画像
                 let photomessage = JSQMessage(senderId: self.oppId, displayName: self.oppDisplayName, media: self.createPhotoItem(response.image_url, isOutgoing: false))
                 self.messages?.append(photomessage)
-                self.events?.append(response.restaurant_url) // self.message.append直後に必ず追加
 
                 // メッセージ表示
-                let from_message = JSQMessage(senderId: self.oppId, displayName: self.oppDisplayName, text: nfc_answer)
-                self.messages?.append(from_message)
-                self.events?.append("") // self.message.append直後に必ず追加
+                //let from_message = JSQMessage(senderId: self.oppId, displayName: self.oppDisplayName, text: nfc_answer)
+                //self.messages?.append(from_message)
+                
+                self.sendFirebase(self.oppId, name: self.oppDisplayName, text: nfc_answer)
                 
                 self.finishReceivingMessageAnimated(true)
                 self.view.endEditing(true)
