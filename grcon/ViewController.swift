@@ -152,16 +152,8 @@ class ViewController: JSQMessagesViewController {
         postRef.setValue(post)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        // キーボード消したい
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
-        view.addGestureRecognizer(tap)
-        
-        inputToolbar!.contentView!.leftBarButtonItem = nil
-        automaticallyScrollsToMostRecentMessage = true
+    // JSQMessageユーザ初期化
+    func setupJSQUser() {
         
         // 自分
         self.senderId = "user"
@@ -177,6 +169,20 @@ class ViewController: JSQMessagesViewController {
         self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "user"), diameter: 64)
         
         self.messages = []
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        // キーボード消したい
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
+        view.addGestureRecognizer(tap)
+        
+        inputToolbar!.contentView!.leftBarButtonItem = nil
+        automaticallyScrollsToMostRecentMessage = true
+        
+        self.setupJSQUser()
         
         self.setupFirebase()
     }
