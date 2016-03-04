@@ -8,7 +8,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="top" id="BYZ-38-t0r" customClass="ViewController" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -24,7 +24,7 @@
                         </connections>
                     </view>
                     <connections>
-                        <segue destination="Ag8-4r-asG" kind="push" identifier="" id="EST-yq-lRo"/>
+                        <segue destination="Ag8-4r-asG" kind="push" identifier="detailViewSegue" id="EST-yq-lRo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -35,7 +35,7 @@
         <!--Detail View-->
         <scene sceneID="J0y-EX-Wnp">
             <objects>
-                <viewController id="Ag8-4r-asG" customClass="DetailView" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="detail" id="Ag8-4r-asG" customClass="DetailView" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Cfc-0R-9ww"/>
                         <viewControllerLayoutGuide type="bottom" id="JBy-CK-yUC"/>
@@ -54,13 +54,13 @@
         <!--Navigation Controller-->
         <scene sceneID="35N-Pf-yMt">
             <objects>
-                <navigationController id="JyX-6L-UJa" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navi" id="JyX-6L-UJa" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jQ9-69-g8g">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="presentation" id="fzQ-Eg-m1E"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="initViewSegue" id="fzQ-Eg-m1E"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OCH-b5-aJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
