@@ -134,9 +134,10 @@ class ViewController: JSQMessagesViewController {
             let text = snapshot.value["text"] as? String
             let sender = snapshot.value["sender"] as? String
             let name = snapshot.value["name"] as? String
+            let type = snapshot.value["type"] as? String
             print(snapshot.value!)
             
-            let message = JSQMessage(senderId: sender, displayName: name, text: text)
+            let message = self.makeJSQMessage(sender, name: name, type: type!, value: text)
             
             self.messages?.append(message)
             self.finishSendingMessageAnimated(true)
@@ -144,9 +145,9 @@ class ViewController: JSQMessagesViewController {
     }
     
     // firebaseへのテキスト送信
-    func sendFirebase(senderId: String, name: String, text: String) {
+    func sendFirebase(senderId: String, name: String, type: String="text", text: String) {
         
-        let post = ["sender": senderId, "name": name, "text": text]
+        let post = ["sender": senderId, "name": name, "type": type, "text": text]
         let postRef = self.fb_server.childByAutoId()
         
         postRef.setValue(post)
@@ -206,6 +207,20 @@ class ViewController: JSQMessagesViewController {
         }
     }
     
+    // アプリ内メッセージ作成部分を取り出してみた
+    func makeJSQMessage(sender: String!, name: String!, type: String, value: String!) -> JSQMessage {
+        var message: JSQMessage
+        switch type {
+        case "text":
+            message = JSQMessage(senderId: sender, displayName: name, text: value)
+        case "media":
+            message = JSQMessage(senderId: sender, displayName: name, media: self.createPhotoItem(value, isOutgoing: false))
+        default:
+            message = JSQMessage(senderId: sender, displayName: name, text: value)
+        }
+        return message
+    }
+    
     // sendボタンを押した時
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
@@ -224,18 +239,11 @@ class ViewController: JSQMessagesViewController {
                 print(response)
                 nfc_answer = "こちらがオススメです。" + response.restaurant_name + " " + response.restaurant_url
 
-                // お店の画像
-                let photomessage = JSQMessage(senderId: self.oppId, displayName: self.oppDisplayName, media: self.createPhotoItem(response.image_url, isOutgoing: false))
-                self.messages?.append(photomessage)
-
-                // メッセージ表示
-                //let from_message = JSQMessage(senderId: self.oppId, displayName: self.oppDisplayName, text: nfc_answer)
-                //self.messages?.append(from_message)
+                // お店の画像メッセージをfbに送信
+                self.sendFirebase(self.oppId, name: self.oppDisplayName, type: "media", text: response.image_url)
                 
+                // オススメメッセージをfbに送信
                 self.sendFirebase(self.oppId, name: self.oppDisplayName, text: nfc_answer)
-                
-                self.finishReceivingMessageAnimated(true)
-                self.view.endEditing(true)
                 
             case .Failure(let error):
                 print("error: \(error)")
@@ -283,14 +291,15 @@ class ViewController: JSQMessagesViewController {
     
     // webから画像もってくる
     private func createImage(url: String) -> UIImage {
+        let failimage: UIImage! = UIImage(named: "noimage")
         guard let nsurl = NSURL(string: url) else {
-            return UIImage(named: "noimage")!
+            return failimage
         }
         guard let data = NSData(contentsOfURL: nsurl) else {
-            return UIImage(named: "noimage")!
+            return failimage
         }
         guard let image = UIImage(data: data) else {
-            return UIImage(named: "noimage")!
+            return failimage
         }
         return image
     }
