@@ -46,13 +46,14 @@ public extension BluemixRequestType where Self.Response: Mappable {
 }
 
 // API毎のモデル構造体
+// お店データ取得API用
 public struct Restaurant: Mappable {
-    var restaurant_name: String!
-    var restaurant_url: String!
-    var input_text: String!
-    var image_url: String!
-    var budget: String!
-    var location: String!
+    var restaurant_name: String!    // お店の名前
+    var restaurant_url: String!     // お店のURL
+    var input_text: String!         // NLCの検索条件に利用されたメッセージ
+    var image_url: String!          // お店の画像用URL
+    var budget: String!             // 参考値段
+    var location: String!           // お店座標
     
     public init?(_ map: Map) {}
     
@@ -87,11 +88,12 @@ public struct NfcRequest: BluemixRequestType {
         return .URL(encoding: NSUTF8StringEncoding)
     }
     
+    // BASE_URL以降のAPIパス
     public var path: String {
         return "/api/nfc"
     }
     
-    // 質問データ
+    // 送信する質問データ
     public var parameters: [String: AnyObject] {
         return ["data": self.send_message]
     }
@@ -106,16 +108,12 @@ class ViewController: JSQMessagesViewController {
     
     let oppId: String = "concierge"
     let oppDisplayName: String = "コンシェルジュ"
-    let girlId: String = "girl"
-    let girlDisplayName: String = "彼女"
     
     var messages: [JSQMessage]?
     var incomingBubble: JSQMessagesBubbleImage!
     var outgoingBubble: JSQMessagesBubbleImage!
-    var girlBubble: JSQMessagesBubbleImage!
     var incomingAvatar: JSQMessagesAvatarImage!
     var outgoingAvatar: JSQMessagesAvatarImage!
-    var girlAvatar: JSQMessagesAvatarImage!
     
     // 暫定キーボード隠す関数
     func DismissKeyboard() {
@@ -131,11 +129,12 @@ class ViewController: JSQMessagesViewController {
         // 最新10件をFirebaseから取得する
         // 最新のデータが追加されるたびに、再取得を行う
         self.fb_server.queryLimitedToLast(self.MAX_MESSAGE_NUM).observeEventType(FEventType.ChildAdded, withBlock: { (snapshot) in
+            print(snapshot.value!)
+            
             let text = snapshot.value["text"] as? String
             let sender = snapshot.value["sender"] as? String
             let name = snapshot.value["name"] as? String
             let type = snapshot.value["type"] as? String
-            print(snapshot.value!)
             
             let message = self.makeJSQMessage(sender, name: name, type: type!, value: text)
             
@@ -172,38 +171,30 @@ class ViewController: JSQMessagesViewController {
         let bubbleFactory = JSQMessagesBubbleImageFactory()
         self.incomingBubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
         self.outgoingBubble = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
-        self.girlBubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleRedColor())
         
         // アバターの設定
         self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "concierge"), diameter: 64)
         self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "user"), diameter: 64)
-        self.girlAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "girl"), diameter: 64)
         
         self.messages = []
         
         self.setupFirebase()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+    // バルーンをタッチした時に呼ばれるイベント
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
         let tapbubble = self.messages![indexPath.item]
         print(tapbubble)
+        
+        // バルーンはmediaデータ
         if let _ = tapbubble.media {
             let detailViewController: UIViewController = DetailView()
             self.navigationController?.pushViewController(detailViewController, animated: true)
             return
         }
-        else {
-            print("no media!!")
-        }
+        
+        // バルーンはtextデータ
         if let _ = tapbubble.text {
-        }
-        else {
-            print("no text!!")
         }
     }
     
@@ -226,6 +217,7 @@ class ViewController: JSQMessagesViewController {
         
         print("senderId:" + senderId! + ", text:" + text!)
         
+        // ユーザメッセージをfbに送信
         self.sendFirebase(senderId, name: senderDisplayName, text: text)
         
         // FIXME:サーバーにメッセージを送信する
@@ -266,9 +258,6 @@ class ViewController: JSQMessagesViewController {
         if message?.senderId == self.senderId {
             return self.outgoingBubble
         }
-        else if message?.senderId == self.girlId {
-            return self.girlBubble
-        }
         return self.incomingBubble
     }
     
@@ -277,9 +266,6 @@ class ViewController: JSQMessagesViewController {
         let message = self.messages?[indexPath.item]
         if message?.senderId == self.senderId {
             return self.outgoingAvatar
-        }
-        else if message?.senderId == self.girlId {
-            return self.girlAvatar
         }
         return self.incomingAvatar
     }
@@ -317,6 +303,12 @@ class ViewController: JSQMessagesViewController {
         photoItem.appliesMediaViewMaskAsOutgoing = isOutgoing
         // 1. この時点ではphotoItem.image=nilなのでローディング表示
         return photoItem
+    }
+    
+    // メモリ不足ワーニング？
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
 }
 
