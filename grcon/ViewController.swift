@@ -117,18 +117,6 @@ class ViewController: JSQMessagesViewController {
     var outgoingAvatar: JSQMessagesAvatarImage!
     var girlAvatar: JSQMessagesAvatarImage!
     
-    var counter: Int = 0
-
-    // 彼女セリフ集
-    let text_list: [String] = [
-        "イタリアンがいいな",
-        "ワインがたくさんあるところがいいな♡",
-        "結構よさそうね",
-        "ここにしましょう？",
-        "決まりね！",
-        "夜の8時に待ち合わせでいい？",
-    ]
-    
     // 暫定キーボード隠す関数
     func DismissKeyboard() {
         view.endEditing(true)
@@ -192,8 +180,6 @@ class ViewController: JSQMessagesViewController {
         
         self.messages = []
         
-        self.counter = 0
-        
         self.setupFirebase()
     }
 
@@ -202,18 +188,6 @@ class ViewController: JSQMessagesViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    func girlEvent(interval: Double = 0.1) {
-        NSTimer.scheduledTimerWithTimeInterval(interval, target: self, selector: "girlTalk", userInfo: nil, repeats: false)
-    }
-    
-    // 女の子しゃべる
-    func girlTalk() {
-        let girl_message = JSQMessage(senderId: self.girlId, displayName: self.girlDisplayName, text: text_list[self.counter])
-        self.messages?.append(girl_message)
-       
-        self.finishReceivingMessageAnimated(true)
-    }
-    
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
         let tapbubble = self.messages![indexPath.item]
         print(tapbubble)
