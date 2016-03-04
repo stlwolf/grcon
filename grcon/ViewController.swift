@@ -106,14 +106,14 @@ class ViewController: JSQMessagesViewController {
     let FIREBASE_URL: String = "https://resplendent-heat-414.firebaseio.com/"
     let FIREBASE_ROOM_ID: String = "messages"
     
-    let oppId: String = "concierge"
+    let oppId: String = "grcon"
     let oppDisplayName: String = "コンシェルジュ"
-    
+
+    // 表示メッセージリスト
     var messages: [JSQMessage]?
-    var incomingBubble: JSQMessagesBubbleImage!
-    var outgoingBubble: JSQMessagesBubbleImage!
-    var incomingAvatar: JSQMessagesAvatarImage!
-    var outgoingAvatar: JSQMessagesAvatarImage!
+    
+    // JSQUserリスト
+    var jsqUsers: [JSQUser]?
     
     // 暫定キーボード隠す関数
     func DismissKeyboard() {
@@ -151,6 +151,46 @@ class ViewController: JSQMessagesViewController {
         
         postRef.setValue(post)
     }
+
+    // 簡易クラス
+    class JSQUser {
+        var senderId: String?
+        var displayName: String?
+        var bubble: JSQMessagesBubbleImage!
+        var avatar: JSQMessagesAvatarImage!
+        
+        init(senderId sender:String, displayName name:String, userType type: String="user") {
+            self.senderId = sender
+            self.displayName = name
+            
+            // 吹き出し情報の設定
+            let bubbleFactory = JSQMessagesBubbleImageFactory()
+            switch type {
+            // コンシェルジュ
+            case "grcon":
+                self.bubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
+            // 他ユーザ
+            case "friend":
+                self.bubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
+            // 使用者ユーザ
+            default:
+                self.bubble = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
+            }
+            
+            // アバター情報設定
+            self.avatar = self.createAvatarImage(fileName: type)
+        }
+        
+        // avater情報作成 -> 今はローカルからのみ作成する
+        func createAvatarImage(fileName name: String, getType type: String="local") -> JSQMessagesAvatarImage? {
+            var avatar: JSQMessagesAvatarImage
+            switch type {
+            default:
+                avatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: name), diameter: 64)
+            }
+            return avatar
+        }
+    }
     
     // JSQMessageユーザ初期化
     func setupJSQUser() {
@@ -159,14 +199,10 @@ class ViewController: JSQMessagesViewController {
         self.senderId = "user"
         self.senderDisplayName = "eddy"
         
-        // 吹き出しの設定
-        let bubbleFactory = JSQMessagesBubbleImageFactory()
-        self.incomingBubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
-        self.outgoingBubble = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
-        
-        // アバターの設定
-        self.incomingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "concierge"), diameter: 64)
-        self.outgoingAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "user"), diameter: 64)
+        // JSQユーザ作成
+        self.jsqUsers = []
+        self.jsqUsers?.append(JSQUser(senderId: "user", displayName: "eddy"))         // 使用者
+        self.jsqUsers?.append(JSQUser(senderId: "grcon", displayName: "コンシェルジュ", userType: "grcon")) // コンシェルジュ
         
         self.messages = []
     }
@@ -179,11 +215,11 @@ class ViewController: JSQMessagesViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         
+        // JSQMessageView初期化
         inputToolbar!.contentView!.leftBarButtonItem = nil
         automaticallyScrollsToMostRecentMessage = true
         
         self.setupJSQUser()
-        
         self.setupFirebase()
     }
 
@@ -260,20 +296,32 @@ class ViewController: JSQMessagesViewController {
         
     // アイテム毎のMessageBubble(背景)を返す
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
-        let message = self.messages?[indexPath.item]
-        if message?.senderId == self.senderId {
-            return self.outgoingBubble
+        let sender = self.messages?[indexPath.item].senderId
+        var bubbleImage: JSQMessageBubbleImageDataSource! = nil
+        
+        // 該当ユーザ探す
+        for user in self.jsqUsers! {
+            if sender == user.senderId {
+                bubbleImage = user.bubble!
+                break
+            }
         }
-        return self.incomingBubble
+        return bubbleImage
     }
     
     // アイテム毎にアバター画像を返す
     override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        let message = self.messages?[indexPath.item]
-        if message?.senderId == self.senderId {
-            return self.outgoingAvatar
+        let sender = self.messages?[indexPath.item].senderId
+        var avatarImage: JSQMessageAvatarImageDataSource! = nil
+        
+        // 該当ユーザ探す
+        for user in self.jsqUsers! {
+            if sender == user.senderId {
+                avatarImage = user.avatar!
+                break
+            }
         }
-        return self.incomingAvatar
+        return avatarImage
     }
     
     // アイテムの総数を返す
@@ -317,4 +365,3 @@ class ViewController: JSQMessagesViewController {
         // Dispose of any resources that can be recreated.
     }
 }
-
