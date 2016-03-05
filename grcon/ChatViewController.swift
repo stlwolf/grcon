@@ -103,8 +103,8 @@ class ChatViewController: JSQMessagesViewController {
 
     var fb_server: Firebase!
     let MAX_MESSAGE_NUM: UInt = 10
-    let FIREBASE_URL: String = "https://resplendent-heat-414.firebaseio.com/"
-    let FIREBASE_ROOM_ID: String = "messages"
+    let FIREBASE_URL: String = "https://resplendent-heat-414.firebaseio.com/messages/"
+    let FIREBASE_ROOM_ID: String = "test"
     
     // 表示メッセージリスト
     var messages: [JSQMessage]?
@@ -120,8 +120,8 @@ class ChatViewController: JSQMessagesViewController {
     // firebaseの初期化
     func setupFirebase() {
         
-        // firebaseへのアクセス用(fbドメイン/messages/ユーザID)
-        self.fb_server = Firebase(url: self.FIREBASE_URL + self.FIREBASE_ROOM_ID + "/" + self.senderId + "/")
+        // firebaseへのアクセス用(fbドメイン/messages/RoomID)
+        self.fb_server = Firebase(url: self.FIREBASE_URL + self.FIREBASE_ROOM_ID + "/")
         
         // 最新10件をFirebaseから取得する
         // 最新のデータが追加されるたびに、再取得を行う
@@ -132,6 +132,12 @@ class ChatViewController: JSQMessagesViewController {
             let sender = snapshot.value["sender"] as? String
             let name = snapshot.value["name"] as? String
             let type = snapshot.value["type"] as? String
+            
+            // 送信者がfriendでまだ知らない人の場合、リストに加えておく
+            let senderIds: [String] = (self.jsqUsers?.map { $0.senderId! })!
+            if !senderIds.contains(sender!) {
+                self.jsqUsers?.append(JSQUser(senderId: sender!, displayName: name!, userType: "friend"))         // 使用者
+            }
             
             let message = self.makeJSQMessage(sender, name: name, type: type!, value: text)
             
@@ -166,10 +172,10 @@ class ChatViewController: JSQMessagesViewController {
             // コンシェルジュ
             case "grcon":
                 self.bubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
-            // 他ユーザ
+            // 友達
             case "friend":
-                self.bubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
-            // 使用者ユーザ
+                self.bubble = bubbleFactory.incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleRedColor())
+            // ユーザ
             default:
                 self.bubble = bubbleFactory.outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
             }
