@@ -8,7 +8,7 @@
 
 import Foundation
 
-class DetailView : UIViewController {
+class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

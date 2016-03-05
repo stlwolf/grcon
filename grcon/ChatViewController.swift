@@ -99,7 +99,7 @@ public struct NfcRequest: BluemixRequestType {
     }
 }
 
-class ViewController: JSQMessagesViewController {
+class ChatViewController: JSQMessagesViewController {
 
     var fb_server: Firebase!
     let MAX_MESSAGE_NUM: UInt = 10
@@ -227,9 +227,7 @@ class ViewController: JSQMessagesViewController {
         
         // バルーンはmediaデータ
         if let _ = tapbubble.media {
-            let detailViewController: UIViewController = DetailView()
-            self.navigationController?.pushViewController(detailViewController, animated: true)
-            return
+            performSegueWithIdentifier("detailPush", sender: nil)
         }
         
         // バルーンはtextデータ

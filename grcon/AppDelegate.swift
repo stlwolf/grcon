@@ -16,12 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
- 
-        let chatView: ViewController = ViewController()
-        let nc = UINavigationController(rootViewController: chatView)
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        self.window?.rootViewController = nc
-        self.window?.makeKeyAndVisible()
+
+//        // codeで初期化
+//        let firstView: LoginViewController = LoginViewController()
+//        let navicon = UINavigationController(rootViewController: firstView)
+//        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+//        self.window?.rootViewController = navicon
+//        self.window?.makeKeyAndVisible()
         
         return true
     }

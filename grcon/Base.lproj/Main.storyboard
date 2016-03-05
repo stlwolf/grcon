@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JyX-6L-UJa">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Chat View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="top" id="BYZ-38-t0r" customClass="ViewController" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="chat" id="BYZ-38-t0r" customClass="ChatViewController" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="Lo">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -24,18 +24,54 @@
                         </connections>
                     </view>
                     <connections>
-                        <segue destination="Ag8-4r-asG" kind="show" identifier="detailViewSegue" id="EST-yq-lRo"/>
+                        <segue destination="Ag8-4r-asG" kind="show" identifier="detailPush" id="fIJ-ge-FAo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="bjd-St-HZB"/>
             </objects>
-            <point key="canvasLocation" x="469" y="644"/>
+            <point key="canvasLocation" x="947" y="-334"/>
         </scene>
-        <!--Detail View-->
+        <!--Login View Controller-->
+        <scene sceneID="fnd-Xe-Zaq">
+            <objects>
+                <viewController storyboardIdentifier="login" id="eG4-yl-oxS" customClass="LoginViewController" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Rtb-Ls-0XB"/>
+                        <viewControllerLayoutGuide type="bottom" id="xrv-DR-Y4l"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="NAf-Qf-SG3">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yg8-g4-gko">
+                                <rect key="frame" x="270" y="285" width="60" height="30"/>
+                                <state key="normal" title="ログイン"/>
+                                <connections>
+                                    <action selector="pushChatView:" destination="eG4-yl-oxS" eventType="touchUpInside" id="BCX-0j-Na1"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Yg8-g4-gko" firstAttribute="centerY" secondItem="NAf-Qf-SG3" secondAttribute="centerY" id="iDa-v5-x97"/>
+                            <constraint firstItem="Yg8-g4-gko" firstAttribute="centerX" secondItem="NAf-Qf-SG3" secondAttribute="centerX" id="s7X-CN-CvD"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="ZRj-aG-pLN"/>
+                    <connections>
+                        <outlet property="loginButton" destination="Yg8-g4-gko" id="yhn-Xw-2Kg"/>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="loginPush" id="4KC-BF-Cnj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k0T-QR-eoO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="151" y="164"/>
+        </scene>
+        <!--Detail View Controller-->
         <scene sceneID="J0y-EX-Wnp">
             <objects>
-                <viewController storyboardIdentifier="detail" id="Ag8-4r-asG" customClass="DetailView" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="detail" id="Ag8-4r-asG" customClass="DetailViewController" customModule="grcon" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Cfc-0R-9ww"/>
                         <viewControllerLayoutGuide type="bottom" id="JBy-CK-yUC"/>
@@ -49,23 +85,23 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xrX-pZ-f8F" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1189" y="644"/>
+            <point key="canvasLocation" x="947" y="522"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="35N-Pf-yMt">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OCH-b5-aJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="navi" id="JyX-6L-UJa" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jQ9-69-g8g">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="initViewSegue" id="fzQ-Eg-m1E"/>
+                        <segue destination="eG4-yl-oxS" kind="relationship" relationship="rootViewController" id="lyQ-Oi-EGS"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OCH-b5-aJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-269" y="644"/>
+            <point key="canvasLocation" x="-629" y="164"/>
         </scene>
     </scenes>
 </document>
