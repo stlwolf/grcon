@@ -120,8 +120,8 @@ class ChatViewController: JSQMessagesViewController {
     // firebaseの初期化
     func setupFirebase() {
         
-        // firebaseへのアクセス用
-        self.fb_server = Firebase(url: self.FIREBASE_URL + self.FIREBASE_ROOM_ID + "/")
+        // firebaseへのアクセス用(fbドメイン/messages/ユーザID)
+        self.fb_server = Firebase(url: self.FIREBASE_URL + self.FIREBASE_ROOM_ID + "/" + self.senderId + "/")
         
         // 最新10件をFirebaseから取得する
         // 最新のデータが追加されるたびに、再取得を行う
