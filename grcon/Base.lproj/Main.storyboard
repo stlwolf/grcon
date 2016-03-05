@@ -24,7 +24,7 @@
                         </connections>
                     </view>
                     <connections>
-                        <segue destination="Ag8-4r-asG" kind="push" identifier="detailViewSegue" id="EST-yq-lRo"/>
+                        <segue destination="Ag8-4r-asG" kind="show" identifier="detailViewSegue" id="EST-yq-lRo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
