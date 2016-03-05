@@ -106,9 +106,6 @@ class ViewController: JSQMessagesViewController {
     let FIREBASE_URL: String = "https://resplendent-heat-414.firebaseio.com/"
     let FIREBASE_ROOM_ID: String = "messages"
     
-    let oppId: String = "grcon"
-    let oppDisplayName: String = "コンシェルジュ"
-
     // 表示メッセージリスト
     var messages: [JSQMessage]?
     
@@ -201,7 +198,7 @@ class ViewController: JSQMessagesViewController {
         
         // JSQユーザ作成
         self.jsqUsers = []
-        self.jsqUsers?.append(JSQUser(senderId: "user", displayName: "eddy"))         // 使用者
+        self.jsqUsers?.append(JSQUser(senderId: self.senderId, displayName: self.senderDisplayName))         // 使用者
         self.jsqUsers?.append(JSQUser(senderId: "grcon", displayName: "コンシェルジュ", userType: "grcon")) // コンシェルジュ
         
         self.messages = []
@@ -257,7 +254,7 @@ class ViewController: JSQMessagesViewController {
     // sendボタンを押した時
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
-        print("senderId:" + senderId! + ", text:" + text!)
+        print("senderId:" + senderId! + ", displayName:" + senderDisplayName + ", text:" + text!)
         
         // ユーザメッセージをfbに送信
         self.sendFirebase(senderId, name: senderDisplayName, text: text)
@@ -272,12 +269,16 @@ class ViewController: JSQMessagesViewController {
                 
                 print(response)
                 nfc_answer = "こちらがオススメです。" + response.restaurant_name + " " + response.restaurant_url
+                
+                // FIXME:かっこわるすぎなので設計見直す
+                let grcon:JSQUser? = self.jsqUsers?.filter { $0.senderId == "grcon" }[0]
+                print(grcon)
 
                 // お店の画像メッセージをfbに送信
-                self.sendFirebase(self.oppId, name: self.oppDisplayName, type: "media", text: response.image_url)
+                self.sendFirebase(grcon!.senderId!,  name: grcon!.displayName!, type: "media", text: response.image_url)
                 
                 // オススメメッセージをfbに送信
-                self.sendFirebase(self.oppId, name: self.oppDisplayName, text: nfc_answer)
+                self.sendFirebase(grcon!.senderId!, name: grcon!.displayName!, text: nfc_answer)
                 
             case .Failure(let error):
                 print("error: \(error)")
