@@ -45,22 +45,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yg8-g4-gko">
-                                <rect key="frame" x="270" y="285" width="60" height="30"/>
+                                <rect key="frame" x="270" y="335" width="60" height="30"/>
                                 <state key="normal" title="ログイン"/>
                                 <connections>
                                     <action selector="pushChatView:" destination="eG4-yl-oxS" eventType="touchUpInside" id="BCX-0j-Na1"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="350" placeholderIntrinsicHeight="30" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="user1" borderStyle="roundedRect" placeholder="ユーザ名" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ADu-0D-o1E">
+                                <rect key="frame" x="200" y="285" width="200" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="XVQ-Ca-zco"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Yg8-g4-gko" firstAttribute="centerY" secondItem="NAf-Qf-SG3" secondAttribute="centerY" id="iDa-v5-x97"/>
-                            <constraint firstItem="Yg8-g4-gko" firstAttribute="centerX" secondItem="NAf-Qf-SG3" secondAttribute="centerX" id="s7X-CN-CvD"/>
+                            <constraint firstItem="ADu-0D-o1E" firstAttribute="centerY" secondItem="NAf-Qf-SG3" secondAttribute="centerY" id="FtK-2H-Grb"/>
+                            <constraint firstItem="Yg8-g4-gko" firstAttribute="centerY" secondItem="NAf-Qf-SG3" secondAttribute="centerY" constant="50" id="HuR-MC-hq5"/>
+                            <constraint firstItem="Yg8-g4-gko" firstAttribute="centerX" secondItem="NAf-Qf-SG3" secondAttribute="centerX" id="bd2-Ma-PJf"/>
+                            <constraint firstItem="ADu-0D-o1E" firstAttribute="centerX" secondItem="NAf-Qf-SG3" secondAttribute="centerX" id="k8x-8M-ZkC"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ZRj-aG-pLN"/>
                     <connections>
                         <outlet property="loginButton" destination="Yg8-g4-gko" id="yhn-Xw-2Kg"/>
+                        <outlet property="userName" destination="ADu-0D-o1E" id="MuB-OL-kt1"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="loginPush" id="4KC-BF-Cnj"/>
                     </connections>
                 </viewController>
@@ -90,7 +101,6 @@
         <!--Navigation Controller-->
         <scene sceneID="35N-Pf-yMt">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OCH-b5-aJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="navi" id="JyX-6L-UJa" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jQ9-69-g8g">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -100,6 +110,7 @@
                         <segue destination="eG4-yl-oxS" kind="relationship" relationship="rootViewController" id="lyQ-Oi-EGS"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OCH-b5-aJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-629" y="164"/>
         </scene>

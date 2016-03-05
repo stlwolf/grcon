@@ -192,8 +192,11 @@ class ChatViewController: JSQMessagesViewController {
     // JSQMessageユーザ初期化
     func setupJSQUser() {
         
-        // 自分
-        self.senderId = "user"
+        // ユーザID
+        if self.senderId == nil {
+            self.senderId = "user"
+        }
+        // ユーザ表示名
         self.senderDisplayName = "eddy"
         
         // JSQユーザ作成
