@@ -224,6 +224,7 @@ class ChatViewController: JSQMessagesViewController {
         // JSQMessageView初期化
         inputToolbar!.contentView!.leftBarButtonItem = nil
         automaticallyScrollsToMostRecentMessage = true
+        self.collectionView?.collectionViewLayout.messageBubbleFont = UIFont.systemFontOfSize(20) // バルーン内のフォントサイズ
         
         self.setupJSQUser()
         self.setupFirebase()
