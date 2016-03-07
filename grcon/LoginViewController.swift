@@ -21,7 +21,7 @@ class LoginViewController : UIViewController {
     
     // ログインボタン
     @IBOutlet weak var loginButton: UIButton!
-    @IBAction func pushChatView(sender: AnyObject) {
+    @IBAction func pushChatView(sender: UIButton) {
         // 遷移の実装は一体どれがいいのか...
         performSegueWithIdentifier("loginPush", sender: nil)
     }
