@@ -36,6 +36,11 @@ public extension BluemixRequestType where Self.Response: Mappable {
             return nil
         }
         
+        // 空の場合は返却値が不適切かもなので、InvalidResponseStructure([:])扱い
+        guard 0 < dictionary.count else {
+            return nil
+        }
+        
         let mapper = Mapper<Response>()
         guard let object = mapper.map(dictionary) else {
             return nil
@@ -290,6 +295,7 @@ class ChatViewController: JSQMessagesViewController {
                 
             case .Failure(let error):
                 print("error: \(error)")
+                return
             }
         }
         
